@@ -1,0 +1,73 @@
+<div class="wrapper" >
+
+    <div class="main-container" >
+        <form class="form-container" [formGroup]="searchFormGroup">
+            <div class="top-search" >
+                <mat-form-field>
+                    <input matInput placeholder="Please enter a tag" formControlName="searchTag">
+                    <mat-error *ngIf="searchFormGroup.get('searchTag')?.invalid">Please enter a comma seperated list to search</mat-error>
+                </mat-form-field>
+                <button (click)="clearForm()" mat-raised-button>Reset</button>
+                <button (click)="submitSearch()"  mat-raised-button color="accent" [disabled]="searchFormGroup.invalid">SUBMIT</button>
+            </div>
+        </form>
+
+        <div class="search-result">
+            <div *ngIf="searchResult"  >
+                <mat-card (click)="openDetails()" >
+                    <img [src]="searchResult.photos.photo[0].url_q" >
+                    <h3>{{searchResult.photos.photo[0].ownername}}</h3>
+                    <div class="details" >
+                        <div class="detail">
+                            <h6>Uploaded</h6>
+                            <h4>{{searchResult.photos.photo[0].dateupload | date: 'shortDate'}}</h4>
+                        </div>
+                        <div class="detail">
+                            <h6>Taken</h6>
+                            <h4>{{searchResult.photos.photo[0].datetaken | date: 'shortDate'}}</h4>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div *ngIf="!searchResult && !searchError && searchRun" >
+                ***No result found for search
+            </div>
+            <div *ngIf="searchError" >
+                {{searchError}}
+            </div>
+        </div>
+
+
+        <div class="saved-search" >
+            <h2>Requests</h2>
+            <div class="sorts">
+                <h3>Sorted by:</h3>
+                <div >
+                    <mat-button-toggle-group (change)="sortValueChanged($event)" aria-label="Font Style">
+                        <mat-button-toggle value="1">Number of Views</mat-button-toggle>
+                        <mat-button-toggle value="2">Date when photo was taken</mat-button-toggle>
+                        <mat-button-toggle value="3">Date when photo was uploaded</mat-button-toggle>
+                      </mat-button-toggle-group>
+                </div>
+            </div>
+            <div  *ngIf="photoLocalStore && photoLocalStore.length>0" class="photos-stored">
+                <div *ngFor="let detail of photoLocalStore" >
+                    <mat-card  >
+                        <img [src]="detail.url_q" >
+                        <h3>{{detail.ownername}}</h3>
+                        <div class="details" >
+                            <div class="detail">
+                                <h6>Uploaded</h6>
+                                <h4>{{detail.dateupload | date: 'shortDate'}}</h4>
+                            </div>
+                            <div class="detail">
+                                <h6>Taken</h6>
+                                <h4>{{detail.datetaken | date: 'shortDate'}}</h4>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
